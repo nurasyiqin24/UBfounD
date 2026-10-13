@@ -1,15 +1,4 @@
 <?php
-
-
-
-echo "<h2>Registration form reached PHP!</h2>";
-
-echo "<h3>Data received:</h3>";
-
-echo "<pre>";
-print_r($_POST);
-echo "</pre>";
-
 // ========================================
 // DATABASE CONNECTION
 // ========================================
