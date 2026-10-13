@@ -111,13 +111,17 @@ $stmt->bind_param(
 
 if ($stmt->execute()) {
 
-    echo "<h2>Registration Successful!</h2>";
-    echo "Your User ID is: " . $conn->insert_id;
+   echo "<script>
+        alert('Registration Successful! Your account has been created.');
+        window.location.href = 'register.html';
+    </script>";
 
 } else {
 
-    echo "<h2>Registration Failed!</h2>";
-    echo "Error: " . $stmt->error;
+    echo "<script>
+        alert('Registration Failed! Please try again.');
+        window.history.back();
+    </script>";
 
 }
 
