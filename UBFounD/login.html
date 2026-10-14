@@ -111,9 +111,9 @@
 
 
                         <!-- Login form -->
-                        <form>
+                        <form action="login.php" method="post">
 
-                            <!-- Email / Student ID -->
+                            <!-- Email -->
                             <div class="mb-4">
 
                                 <label for="loginEmail" class="form-label">
@@ -121,10 +121,12 @@
                                 </label>
 
                                 <input
-                                    type="text"
+                                    type="email"
                                     class="form-control"
                                     id="loginEmail"
+                                    name="email"
                                     placeholder="Enter your email address"
+                                    required
                                 >
 
                             </div>
@@ -141,7 +143,9 @@
                                     type="password"
                                     class="form-control"
                                     id="loginPassword"
+                                    name="password"
                                     placeholder="Enter your password"
+                                    required
                                 >
 
                             </div>
@@ -229,7 +233,19 @@
 
     </footer>
 
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get("error");
+        const success = params.get("success");
 
+        if (error) {
+            alert(error);
+        }
+
+        if (success) {
+            alert(success);
+        }
+    </script>
 
     <!-- Bootstrap JavaScript -->
     <script

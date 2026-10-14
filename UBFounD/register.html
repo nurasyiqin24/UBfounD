@@ -289,7 +289,19 @@
 
     </footer>
 
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get("error");
+        const success = params.get("success");
 
+        if (error) {
+            alert(error);
+        }
+
+        if (success) {
+            alert(success);
+        }
+    </script>
 
     <!-- Bootstrap JavaScript -->
     <script
