@@ -1,13 +1,12 @@
+
 <?php
 session_start();
 
-// Only accept form submissions using POST.
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: login.html");
     exit;
 }
 
-// Connect to the existing database.
 $conn = new mysqli(
     "localhost",
     "root",
@@ -24,17 +23,19 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8mb4");
 
-// Read the form fields from login.html.
-
+// Read the login form values.
+$identifier = trim($_POST["identifier"] ?? "");
+$password = $_POST["password"] ?? "";
 
 // Validate the submitted fields.
 if ($identifier === "" || $password === "") {
     $conn->close();
-    header("Location: login.html? error=" . urlencode("Please enter your email or Student ID and password."));
+    header("Location: login.html?error=" .
+        urlencode("Please enter your email or Student ID and password."));
     exit;
 }
 
-// Check which column names exist in the user table.
+// Read the available columns from the user table.
 $result = $conn->query("SHOW COLUMNS FROM `user`");
 
 if ($result === false) {
@@ -72,15 +73,14 @@ foreach (["StudentID", "StudentId", "student_id"] as $candidate) {
     }
 }
 
-// Stop if the required database columns cannot be found.
 if ($emailColumn === null || $studentColumn === null) {
     $conn->close();
-    error_log("Email or Student ID column was not found in user table.");
+    error_log("Email or Student ID column was not found.");
     http_response_code(500);
-    exit("Unable to process login request. Please check the user table columns.");
+    exit("Please check the email and Student ID columns in your database.");
 }
 
-// Search for a matching email OR Student ID.
+// Search using email OR Student ID.
 $sql = "SELECT * FROM `user`
         WHERE `{$emailColumn}` = ?
            OR `{$studentColumn}` = ?
@@ -101,17 +101,13 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
-echo "Database query completed.<br>";
-echo "Matching account found: " . ($user ? "YES" : "NO") . "<br>";
-echo "Password hash exists: " .
-     (($user && !empty($user["Password"])) ? "YES" : "NO");
-exit;
+$stmt->close();
+$conn->close();
 
-// Verify the entered password against the stored password hash.
+// Verify the password.
 if ($user && isset($user["Password"])
     && password_verify($password, $user["Password"])) {
 
-    // Create a fresh session ID after successful login.
     session_regenerate_id(true);
 
     $_SESSION["user_id"] = $user["UserID"] ?? $user["id"] ?? null;
@@ -119,12 +115,12 @@ if ($user && isset($user["Password"])
     $_SESSION["user_email"] = $user[$emailColumn] ?? "";
     $_SESSION["user_role"] = $user["Role"] ?? "Student";
 
-    // Redirect to your existing home/dashboard page.
     header("Location: index.html");
     exit;
 }
 
-// Login failed.
-header("Location: login.html?error=" . urlencode("Invalid email, Student ID, or password."));
+// Invalid credentials.
+header("Location: login.html?error=" .
+    urlencode("Invalid email, Student ID, or password."));
 exit;
 ?>
