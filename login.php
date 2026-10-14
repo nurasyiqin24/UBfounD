@@ -105,9 +105,7 @@ echo "Database query completed.<br>";
 echo "Matching account found: " . ($user ? "YES" : "NO") . "<br>";
 echo "Password hash exists: " .
      (($user && !empty($user["Password"])) ? "YES" : "NO");
-
-$stmt->close();
-$conn->close();
+exit;
 
 // Verify the entered password against the stored password hash.
 if ($user && isset($user["Password"])
