@@ -1,0 +1,239 @@
+css
+/* ================================
+   GENERAL PAGE STYLING
+   ================================ */
+
+/* Change the default page font */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #212529;
+}
+
+
+/* ================================
+   NAVIGATION BAR
+   ================================ */
+
+/* Change the colour of the website name */
+.navbar {
+    background-color: #17365d !important;
+}
+
+.navbar-brand,
+.navbar .nav-link {
+    color: white !important;
+}
+
+/*Make it more spacious*/
+.navbar .nav-link {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.navbar .nav-link:hover {
+    color: #dbe7f5 !important;
+}
+
+.navbar .nav-link:hover {
+    color: #dbe7f5 !important;
+}
+
+
+/* ================================
+   HERO SECTION
+   ================================ */
+
+/* Main introduction area */
+.hero-section {
+    background-color: #f4f7fb;
+    padding: 80px 0;
+}
+
+
+/* Small visual card on the right */
+.hero-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Large search icon */
+.hero-icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+
+/* ================================
+   STATISTICS
+   ================================ */
+
+/* Small dashboard-style cards */
+.stat-card {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #e5e5e5;
+}
+
+.stat-card h2 {
+    color: #17365d;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+
+/* ================================
+   ITEM CARDS
+   ================================ */
+
+/* Makes item cards look slightly raised */
+.item-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+
+/* Simple placeholder for item images */
+.item-image {
+    height: 180px;
+    background-color: #eef2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    transition: 0.2s;
+}
+
+
+/* Add a small effect when the mouse is over an item */
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.item-card:hover .item-image {
+    background-color: #e2eaf4;
+}
+
+
+/* ================================
+   BUTTONS
+   ================================ */
+
+/* Use our main blue colour */
+.action-button {
+    background-color: white;
+    color: #17365d;
+    border: 2px solid #17365d;
+    transition: 0.2s;
+}
+
+.action-button:hover {
+    background-color: #17365d;
+    color: white;
+    border-color: #17365d;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    max-width: 600px;
+}
+
+.search-box input {
+    flex: 1;
+}
+
+.search-button {
+    background-color: #17365d;
+    color: white;
+    border: 2px solid #17365d;
+}
+
+.search-button:hover {
+    background-color: #0f2947;
+    color: white;
+}
+
+/* Notification bell */
+.notification-bell {
+    position: relative;
+    font-size: 20px;
+}
+
+.item-image {
+    height: 180px;
+    background-color: #eef2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    transition: 0.2s;
+}
+
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+
+/* ================================
+   FOOTER
+   ================================ */
+
+/* Footer background */
+footer {
+    background-color: #17365d;
+    color: white;
+}
+
+
+
+
+
+
+
+/* ==================== LOGIN PAGE ==================== */
+
+/* Login section */
+.login-section {
+    background-color: #f4f7fb;
+    min-height: 75vh;
+    padding: 70px 0;
+}
+
+/* Login card */
+.login-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Lock icon */
+/*.login-icon {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+/* Register link */
+.register-link {
+    color: #17365d;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Register link hover */
+.register-link:hover {
+    text-decoration: underline;
+}
