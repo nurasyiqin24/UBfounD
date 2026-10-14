@@ -31,7 +31,7 @@ $password = $_POST["password"] ?? "";
 // Validate the submitted fields.
 if ($identifier === "" || $password === "") {
     $conn->close();
-    header("Location: login.html?error=" . urlencode("Please enter your email or Student ID and password."));
+    header("Location: login.html? error=" . urlencode("Please enter your email or Student ID and password."));
     exit;
 }
 
