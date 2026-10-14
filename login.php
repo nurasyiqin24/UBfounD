@@ -25,14 +25,7 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8mb4");
 
 // Read the form fields from login.html.
-$identifier = trim($_POST["identifier"] ?? "");
-$password = $_POST["password"] ?? "";
 
-echo "Login PHP was reached.<br>";
-echo "Request method: " . $_SERVER["REQUEST_METHOD"] . "<br>";
-echo "Identifier received: " .
-     htmlspecialchars($identifier, ENT_QUOTES, "UTF-8");
-exit;
 
 // Validate the submitted fields.
 if ($identifier === "" || $password === "") {
@@ -107,6 +100,11 @@ $stmt->execute();
 
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
+
+echo "Database query completed.<br>";
+echo "Matching account found: " . ($user ? "YES" : "NO") . "<br>";
+echo "Password hash exists: " .
+     (($user && !empty($user["Password"])) ? "YES" : "NO");
 
 $stmt->close();
 $conn->close();
