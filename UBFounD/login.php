@@ -28,6 +28,12 @@ $conn->set_charset("utf8mb4");
 $identifier = trim($_POST["identifier"] ?? "");
 $password = $_POST["password"] ?? "";
 
+echo "Login PHP was reached.<br>";
+echo "Request method: " . $_SERVER["REQUEST_METHOD"] . "<br>";
+echo "Identifier received: " .
+     htmlspecialchars($identifier, ENT_QUOTES, "UTF-8");
+exit;
+
 // Validate the submitted fields.
 if ($identifier === "" || $password === "") {
     $conn->close();
