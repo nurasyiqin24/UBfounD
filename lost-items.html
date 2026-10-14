@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lost Items - UbdFind</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Our own CSS file -->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- ==================== NAVBAR ==================== -->
+
+    <nav class="navbar navbar-expand-lg bg-white border-bottom">
+
+        <div class="container">
+
+            <!-- Website name -->
+            <a class="navbar-brand fw-bold" href="index.html">
+                UbdFind
+            </a>
+
+
+            <!-- Mobile menu button -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+            >
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+
+            <!-- Navigation links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav ms-auto">
+
+
+                    <!-- Home -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            Home
+                        </a>
+                    </li>
+
+
+                    <!-- Lost Items -->
+                    <li class="nav-item">
+                        <a class="nav-link active" href="lost-items.html">
+                            Lost Items
+                        </a>
+                    </li>
+
+
+                    <!-- Found Items -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="found-items.html">
+                            Found Items
+                        </a>
+                    </li>
+
+
+                    <!-- My Reports -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="my-reports.html">
+                            My Reports
+                        </a>
+                    </li>
+
+
+                    <!-- Matches -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="matches.html">
+                            Matches
+                        </a>
+                    </li>
+
+
+                    <!-- Notification bell -->
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link notification-bell"
+                            href="notifications.html"
+                        >
+                            🔔
+                        </a>
+
+                    </li>
+
+
+                    <!-- Profile -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">
+                            Profile
+                        </a>
+                    </li>
+
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- ==================== PAGE HEADER ==================== -->
+
+    <section class="py-5">
+
+        <div class="container">
+
+            <!-- Page title -->
+            <h1 class="fw-bold">
+                Lost Items
+            </h1>
+
+            <!-- Short description -->
+            <p class="text-muted">
+                Browse items that have been reported lost in UBD.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+  <!-- ==================== SEARCH AND FILTER ==================== -->
+
+<section class="pb-4">
+
+    <div class="container">
+
+        <div class="row g-3">
+
+
+            <!-- Search box -->
+            <div class="col-md-6">
+
+                <label for="searchItem" class="form-label">
+                    Search Items
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    id="searchItem"
+                    placeholder="Search by item name..."
+                >
+
+            </div>
+
+
+            <!-- Category filter -->
+            <div class="col-md-4">
+
+                <label for="category" class="form-label">
+                    Category
+                </label>
+
+                <select
+                    class="form-select"
+                    id="category"
+                >
+
+                    <option selected>
+                        All Categories
+                    </option>
+
+                    <option>
+                        Electronics
+                    </option>
+
+                    <option>
+                        Wallet
+                    </option>
+
+                    <option>
+                        Keys
+                    </option>
+
+                    <option>
+                        Documents
+                    </option>
+
+                    <option>
+                        Accessories
+                    </option>
+
+                    <option>
+                        Stationeries
+                    </option>
+
+                    <option>
+                        Bottles
+                    </option>
+
+                    <option>
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Search button -->
+            <div class="col-md-2 d-flex align-items-end">
+
+                <button
+                    type="button"
+                    class="btn btn-primary w-100 search-button"
+                >
+                    🔍 Search
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+    <!-- ==================== LOST ITEM LIST ==================== -->
+
+    <section class="py-4">
+
+        <div class="container">
+
+            <div class="row g-4">
+
+
+                <!-- ==================== ITEM 1 ==================== -->
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="item-card h-100">
+
+
+                        <!-- Item image -->
+                        <div class="item-image">
+
+                            <img
+                                src="assets/images/smartphone.jfif"
+                                alt="Gray smartphone"
+                            >
+
+                        </div>
+
+
+                        <!-- Item information -->
+                        <div class="p-3">
+
+
+                            <!-- Lost status -->
+                            <span class="badge bg-danger mb-2">
+                                LOST
+                            </span>
+
+
+                            <!-- Item name -->
+                            <h5 class="fw-bold">
+                                Gray Smartphone
+                            </h5>
+
+
+                            <!-- Category -->
+                            <p class="text-muted mb-1">
+                                Category: Electronics
+                            </p>
+
+
+                            <!-- Location -->
+                            <p class="text-muted mb-1">
+                                Location: SDS building
+                            </p>
+
+
+                            <!-- Date -->
+                            <p class="text-muted">
+                                Lost Date: 20 September 2026
+                            </p>
+
+
+                            <!-- View details button -->
+                            <a
+                                href="item-details.html"
+                                class="btn btn-primary w-100"
+                            >
+                                View Details
+                            </a>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================== ITEM 2 ==================== -->
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="item-card h-100">
+
+
+                        <!-- Item image -->
+                        <div class="item-image">
+
+                            <img
+                                src="assets/images/wallet.jfif"
+                                alt="Brown Wallet"
+                            >
+
+                        </div>
+
+
+                        <!-- Item information -->
+                        <div class="p-3">
+
+
+                            <!-- Lost status -->
+                            <span class="badge bg-danger mb-2">
+                                LOST
+                            </span>
+
+
+                            <!-- Item name -->
+                            <h5 class="fw-bold">
+                                Brown Wallet
+                            </h5>
+
+
+                            <!-- Category -->
+                            <p class="text-muted mb-1">
+                                Category: Wallet
+                            </p>
+
+
+                            <!-- Location -->
+                            <p class="text-muted mb-1">
+                                Location: Cafeteria
+                            </p>
+
+
+                            <!-- Date -->
+                            <p class="text-muted">
+                                Lost Date: 22 September 2026
+                            </p>
+
+
+                            <!-- View details button -->
+                            <a
+                                href="item-details.html"
+                                class="btn btn-primary w-100"
+                            >
+                                View Details
+                            </a>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================== ITEM 3 ==================== -->
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="item-card h-100">
+
+
+                        <!-- Item image -->
+                        <div class="item-image">
+
+                            <img
+                                src="assets/images/keys.jfif"
+                                alt="Set of keys"
+                            >
+
+                        </div>
+
+
+                        <!-- Item information -->
+                        <div class="p-3">
+
+
+                            <!-- Lost status -->
+                            <span class="badge bg-danger mb-2">
+                                LOST
+                            </span>
+
+
+                            <!-- Item name -->
+                            <h5 class="fw-bold">
+                                Set of Keys
+                            </h5>
+
+
+                            <!-- Category -->
+                            <p class="text-muted mb-1">
+                                Category: Keys
+                            </p>
+
+
+                            <!-- Location -->
+                            <p class="text-muted mb-1">
+                                Location: FASS building
+                            </p>
+
+
+                            <!-- Date -->
+                            <p class="text-muted">
+                                Lost Date: 24 September 2026
+                            </p>
+
+
+                            <!-- View details button -->
+                            <a
+                                href="item-details.html"
+                                class="btn btn-primary w-100"
+                            >
+                                View Details
+                            </a>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==================== FOOTER ==================== -->
+
+    <footer class="py-2">
+
+        <div class="container text-center">
+
+
+            <!-- Website name -->
+            <p class="fw-bold mb-1">
+                UbdFind
+            </p>
+
+
+            <!-- Website description -->
+            <p class="small mb-1">
+                Campus Lost & Found System
+            </p>
+
+
+            <!-- Help information -->
+            <p class="small mb-1">
+                Need help?
+            </p>
+
+
+            <!-- Email -->
+            <p class="small mb-1">
+
+                Email:
+
+                <a href="mailto:lostandfound@university.edu">
+                    UbdFind@ubd.edu.bn
+                </a>
+
+            </p>
+
+
+            <!-- Phone -->
+            <p class="small mb-2">
+                Phone: +673 246 XXXX
+            </p>
+
+
+            <!-- Copyright -->
+            <p class="small mb-0">
+                © 2026 UbdFind
+            </p>
+
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- Bootstrap JavaScript -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
+
+</body>
+
+</html>
