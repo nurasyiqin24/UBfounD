@@ -220,6 +220,15 @@ footer {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
+
+/* Make login and registration textboxes consistent */
+.login-card .form-control {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
 /* Lock icon */
 /*.login-icon {
     font-size: 45px;
