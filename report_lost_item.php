@@ -35,7 +35,7 @@ $categories = [];
 if ($userId !== null) {
     $userStmt = $conn->prepare(
         "SELECT Name, Email, Phone
-         FROM `USER`
+         FROM `user`
          WHERE UserID = ?"
     );
 
