@@ -215,114 +215,115 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 if ($uploadError !== "") {
                     $message = $uploadError;
-                } else {
-                    try {
-                        // Begin a transaction so related records are saved
-                        // together instead of leaving a partial report.
-                        $conn->begin_transaction();
+                    } else {
+                        try {
+                            // Begin a transaction so related records are saved
+                            // together instead of leaving a partial report.
+                            $conn->begin_transaction();
 
-                        // STEP 1: Save the item's details.
-                        // The description is stored in OtherComments
-                        // because ITEM PROFILE has no Description column.
-                        $profileStmt = $conn->prepare(
-                            "INSERT INTO `item_profile`
-                                (CategoryID, ItemName, OtherComments)
-                             VALUES (?, ?, ?)"
-                        );
-
-                        $profileStmt->bind_param(
-                            "iss",
-                            $categoryId,
-                            $itemName,
-                            $description
-                        );
-
-                        $profileStmt->execute();
-
-                        // Get the ID of the newly created item profile.
-                        $itemProfileId = $conn->insert_id;
-                        $profileStmt->close();
-
-                        // STEP 2: Save the lost-item report.
-                        // UserID links the report to the logged-in user.
-                        // DateReported records today's date.
-                        // DateOccured records the date the item was lost.
-                        // Additional notes are saved in Comments.
-                        //
-                        // Check whether TimeOccured allows NULL.
-                        // If it does, save NULL because the form has no time field.
-                        // Otherwise, omit it and rely on the database default.
-                        $timeColumn = $conn->query(
-                            "SHOW COLUMNS FROM `ITEM REPORT`
-                             LIKE 'TimeOccured'"
-                        )->fetch_assoc();
-
-                        if ($timeColumn && $timeColumn["Null"] === "YES") {
-                            $reportStmt = $conn->prepare(
-                                "INSERT INTO `item_report`
-                                    (UserID, ItemProfileID, ReportType,
-                                     DateReported, Location, DateOccured,
-                                     TimeOccured, Status, Comments)
-                                 VALUES (?, ?, 'Lost', CURDATE(),
-                                         ?, ?, NULL, 'Open', ?)"
-                            );
-                        } else {
-                            $reportStmt = $conn->prepare(
-                                "INSERT INTO `item_report`
-                                    (UserID, ItemProfileID, ReportType,
-                                     DateReported, Location, DateOccured,
-                                     Status, Comments)
-                                 VALUES (?, ?, 'Lost', CURDATE(),
-                                         ?, ?, 'Open', ?)"
-                            );
-                        }
-
-                        $reportStmt->bind_param(
-                            "iisss",
-                            $userId,
-                            $itemProfileId,
-                            $location,
-                            $dateLost,
-                            $notes
-                        );
-
-                        $reportStmt->execute();
-                        $reportStmt->close();
-
-                        // STEP 3: Save the image path if an image was uploaded.
-                        if ($imagePath !== null) {
-                            $imageStmt = $conn->prepare(
-                                "INSERT INTO `item_image`
-                                    (ItemProfileID, ImageLink, DateUpload)
-                                 VALUES (?, ?, NOW())"
+                            // STEP 1: Save the item's details.
+                            // The description is stored in OtherComments
+                            // because ITEM PROFILE has no Description column.
+                            $profileStmt = $conn->prepare(
+                                "INSERT INTO `item_profile`
+                                    (CategoryID, ItemName, OtherComments)
+                                VALUES (?, ?, ?)"
                             );
 
-                            $imageStmt->bind_param(
-                                "is",
+                            $profileStmt->bind_param(
+                                "iss",
+                                $categoryId,
+                                $itemName,
+                                $description
+                            );
+
+                            $profileStmt->execute();
+
+                            // Get the ID of the newly created item profile.
+                            $itemProfileId = $conn->insert_id;
+                            $profileStmt->close();
+
+                            // STEP 2: Save the lost-item report.
+                            // UserID links the report to the logged-in user.
+                            // DateReported records today's date.
+                            // DateOccured records the date the item was lost.
+                            // Additional notes are saved in Comments.
+                            //
+                            // Check whether TimeOccured allows NULL.
+                            // If it does, save NULL because the form has no time field.
+                            // Otherwise, omit it and rely on the database default.
+                            $timeColumn = $conn->query(
+                                "SHOW COLUMNS FROM `item_report`
+                                LIKE 'TimeOccured'"
+                            )->fetch_assoc();
+
+                            if ($timeColumn && $timeColumn["Null"] === "YES") {
+                                $reportStmt = $conn->prepare(
+                                    "INSERT INTO `item_report`
+                                        (UserID, ItemProfileID, ReportType,
+                                        DateReported, Location, DateOccured,
+                                        TimeOccured, Status, Comments)
+                                    VALUES (?, ?, 'Lost', CURDATE(),
+                                            ?, ?, NULL, 'Open', ?)"
+                                );
+                            } else {
+                                $reportStmt = $conn->prepare(
+                                    "INSERT INTO `item_report`
+                                        (UserID, ItemProfileID, ReportType,
+                                        DateReported, Location, DateOccured,
+                                        Status, Comments)
+                                    VALUES (?, ?, 'Lost', CURDATE(),
+                                            ?, ?, 'Open', ?)"
+                                );
+                            }
+
+                            $reportStmt->bind_param(
+                                "iisss",
+                                $userId,
                                 $itemProfileId,
-                                $imagePath
+                                $location,
+                                $dateLost,
+                                $notes
                             );
 
-                            $imageStmt->execute();
-                            $imageStmt->close();
-                        }
+                            $reportStmt->execute();
+                            $reportStmt->close();
 
-                        // Save all database changes together.
-                        $conn->commit();
+                            // STEP 3: Save the image path if an image was uploaded.
+                            if ($imagePath !== null) {
+                                $imageStmt = $conn->prepare(
+                                    "INSERT INTO `item_image`
+                                        (ItemProfileID, ImageLink, DateUpload)
+                                    VALUES (?, ?, NOW())"
+                                );
 
-                        $message = "Your lost-item report was submitted successfully.";
-                        $messageType = "success";
+                                $imageStmt->bind_param(
+                                    "is",
+                                    $itemProfileId,
+                                    $imagePath
+                                );
 
-                    } catch (Throwable $error) {
-                        // Undo database changes if any step fails.
-                        $conn->rollback();
+                                $imageStmt->execute();
+                                $imageStmt->close();
+                            }
 
-                        // Log the technical error for debugging.
-                        error_log("Lost-item report error: " . $error->getMessage());
+                            // Save all database changes together.
+                            $conn->commit();
 
-                        // Show a simple message to the user.
-                        $message =
-                            "Database error: " . $error->getMessage();
+                            $message = "Your lost-item report was submitted successfully.";
+                            $messageType = "success";
+
+                        } catch (Throwable $error) {
+                            // Undo database changes if any step fails.
+                            $conn->rollback();
+
+                            // Log the technical error for debugging.
+                            error_log("Lost-item report error: " . $error->getMessage());
+
+                            // Show a simple message to the user.
+                            $message =
+                                "Database error: " . $error->getMessage();
+                    }
                 }
             }
         }
