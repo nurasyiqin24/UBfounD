@@ -75,3 +75,17 @@ foreach ($items as $item) {
 
 sort($categories);
 ?>
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost Items | UbdFind</title>
+</head>
+<body>
+
+    <h1>Lost Items page is working!</h1>
+
+</body>
+</html>
