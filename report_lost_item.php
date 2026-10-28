@@ -54,7 +54,7 @@ if ($emailColumn === null) {
 
 if ($userId !== null) {
     $userStmt = $conn->prepare(
-        "SELECT Name, Email, Phone
+        "SELECT Name, $emailColumn, Phone
          FROM `user`
          WHERE UserID = ?"
     );
