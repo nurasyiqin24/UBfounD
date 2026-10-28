@@ -79,11 +79,185 @@ sort($categories);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Found Items | UbdFind</title>
+
+    <title><?= $reportType === "FOUND" ? "Lost Items" : "Found Items" ?> | UbdFind</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-    <h1>Found Items page is working!</h1>
+<!-- Navigation bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">UbdFind</a>
+
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link" href="lost-items.php">Lost Items</a>
+            <a class="nav-link" href="found-items.php">Found Items</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Page heading -->
+<div class="container mt-4">
+    <h1>
+        <?= $reportType === "LOST" ? "Lost Items" : "Found Items" ?>
+    </h1>
+
+    <p>
+        <?= $reportType === "LOST"
+            ? "Browse items that have been reported lost."
+            : "Browse items that have been reported found." ?>
+    </p>
+
+    <!-- Search and category filter -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-8">
+            <input
+                type="text"
+                id="searchItem"
+                class="form-control"
+                placeholder="Search by item name..."
+                aria-label="Search items">
+        </div>
+
+        <div class="col-md-4">
+            <select id="categoryFilter"
+                    class="form-select"
+                    aria-label="Filter by category">
+                <option value="">All Categories</option>
+
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= htmlspecialchars($category, ENT_QUOTES, 'UTF-8') ?>">
+                        <?= htmlspecialchars($category, ENT_QUOTES, 'UTF-8') ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+
+    <!-- Dynamic item cards -->
+    <div class="row g-4" id="itemsContainer">
+
+        <?php foreach ($items as $item): ?>
+            <?php
+                $itemName = $item["ItemName"] ?? "Unnamed Item";
+                $categoryName = $item["CategoryName"] ?? "Uncategorised";
+                $location = $item["Location"] ?? "Location not specified";
+                $dateOccurred = $item["DateOccurred"] ?? "";
+                $imageLink = $item["ImageLink"] ?? "";
+            ?>
+
+            <div class="col-md-6 col-lg-4 item-card-container"
+                 data-name="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>"
+                 data-category="<?= htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') ?>">
+
+                <div class="card h-100 shadow-sm">
+
+                    <?php if ($imageLink !== ""): ?>
+                        <img
+                            src="<?= htmlspecialchars($imageLink, ENT_QUOTES, 'UTF-8') ?>"
+                            class="card-img-top"
+                            alt="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>"
+                            style="height: 220px; object-fit: cover;">
+                    <?php else: ?>
+                        <div class="d-flex align-items-center justify-content-center bg-light text-muted"
+                             style="height: 220px;">
+                            No image available
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="card-body">
+                        <span class="badge <?= $reportType === "LOST" ? "bg-danger" : "bg-success" ?>">
+                            <?= htmlspecialchars($reportType) ?>
+                        </span>
+
+                        <h5 class="card-title mt-2">
+                            <?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>
+                        </h5>
+
+                        <p class="card-text mb-1">
+                            <strong>Category:</strong>
+                            <?= htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') ?>
+                        </p>
+
+                        <p class="card-text mb-1">
+                            <strong>Location:</strong>
+                            <?= htmlspecialchars($location, ENT_QUOTES, 'UTF-8') ?>
+                        </p>
+
+                        <p class="card-text mb-1">
+                            <strong>Date:</strong>
+                            <?= $dateOccurred !== ""
+                                ? htmlspecialchars($dateOccurred, ENT_QUOTES, 'UTF-8')
+                                : "Not specified" ?>
+                        </p>
+
+                        <p class="card-text">
+                            <strong>Status:</strong>
+                            <?= htmlspecialchars($item["Status"] ?? "Not specified", ENT_QUOTES, 'UTF-8') ?>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        <?php endforeach; ?>
+
+    </div>
+
+    <!-- Shown when no items match the filters -->
+    <p id="noResults"
+       class="text-center mt-4"
+       <?= count($items) > 0 ? "hidden" : "" ?>>
+        No items found.
+    </p>
+</div>
+
+<!-- Search and category filtering -->
+<script>
+    const searchInput = document.getElementById("searchItem");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const cards = document.querySelectorAll(".item-card-container");
+    const noResults = document.getElementById("noResults");
+
+    function filterItems() {
+        const searchText = searchInput.value.toLowerCase().trim();
+        const selectedCategory = categoryFilter.value.toLowerCase();
+
+        let visibleCount = 0;
+
+        cards.forEach(function(card) {
+            const name = card.dataset.name.toLowerCase();
+            const category = card.dataset.category.toLowerCase();
+
+            const matchesName = name.includes(searchText);
+            const matchesCategory =
+                selectedCategory === "" ||
+                category === selectedCategory;
+
+            const visible = matchesName && matchesCategory;
+
+            card.hidden = !visible;
+
+            if (visible) {
+                visibleCount++;
+            }
+        });
+
+        noResults.hidden = visibleCount > 0;
+    }
+
+    searchInput.addEventListener("input", filterItems);
+    categoryFilter.addEventListener("change", filterItems);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
