@@ -39,7 +39,7 @@ $sql = "
         ) AS ImageLink
     FROM item_report AS r
     INNER JOIN item_profile AS p
-        ON r.`ItemProfile ID` = p.ItemProfileID
+        ON r.ItemProfileID = p.ItemProfileID
     LEFT JOIN category AS c
         ON p.CategoryID = c.CategoryID
     WHERE r.ReportType = ?
