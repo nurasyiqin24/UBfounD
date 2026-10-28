@@ -32,6 +32,26 @@ $userName = "";
 $categories = [];
 
 // Check whether a user is logged in before allowing a report.
+$columnsResult = $conn->query("SHOW COLUMNS FROM `user`");
+$userColumns = [];
+
+while ($column = $columnsResult->fetch_assoc()) {
+    $userColumns[] = $column["Field"];
+}
+
+$emailColumn = null;
+
+foreach (["Email", "Emaill"] as $candidate) {
+    if (in_array($candidate, $userColumns, true)) {
+        $emailColumn = $candidate;
+        break;
+    }
+}
+
+if ($emailColumn === null) {
+    throw new Exception("Email column not found in user table.");
+}
+
 if ($userId !== null) {
     $userStmt = $conn->prepare(
         "SELECT Name, Email, Phone
@@ -48,7 +68,7 @@ if ($userId !== null) {
     // Confirm that this user ID exists in the database.
     if ($user) {
         $userName = $user["Name"] ?? "";
-        $userEmail = $user["Email"] ?? "";
+        $userEmail = $user[$emailColumn] ?? "";
         $userPhone = $user["Phone"] ?? "";
     } else {
         $userId = null;
