@@ -17,7 +17,7 @@ $conn->set_charset("utf8mb4");
 
 // Get the ID of the user who logged in.
 // IMPORTANT: This session key must match your login PHP code.
-$userId = $_SESSION["UserID"] ?? null;
+$userId = $_SESSION["user_id"] ?? null;
 
 // Store messages that will be displayed on the page.
 $message = "";
@@ -60,7 +60,7 @@ if ($userId !== null) {
 // Load the available categories from the database.
 $categoryResult = $conn->query(
     "SELECT CategoryID, CategoryName
-     FROM `CATEGORY`
+     FROM `category`
      ORDER BY CategoryName"
 );
 
@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Confirm that the selected category exists.
             $checkCategory = $conn->prepare(
                 "SELECT CategoryID
-                 FROM `CATEGORY`
+                 FROM `category`
                  WHERE CategoryID = ?"
             );
 
@@ -205,7 +205,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         // The description is stored in OtherComments
                         // because ITEM PROFILE has no Description column.
                         $profileStmt = $conn->prepare(
-                            "INSERT INTO `ITEM PROFILE`
+                            "INSERT INTO `item_profile`
                                 (CategoryID, ItemName, OtherComments)
                              VALUES (?, ?, ?)"
                         );
@@ -239,7 +239,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                         if ($timeColumn && $timeColumn["Null"] === "YES") {
                             $reportStmt = $conn->prepare(
-                                "INSERT INTO `ITEM REPORT`
+                                "INSERT INTO `item_report`
                                     (UserID, ItemProfileID, ReportType,
                                      DateReported, Location, DateOccured,
                                      TimeOccured, Status, Comments)
@@ -248,7 +248,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             );
                         } else {
                             $reportStmt = $conn->prepare(
-                                "INSERT INTO `ITEM REPORT`
+                                "INSERT INTO `item_report`
                                     (UserID, ItemProfileID, ReportType,
                                      DateReported, Location, DateOccured,
                                      Status, Comments)
@@ -272,7 +272,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         // STEP 3: Save the image path if an image was uploaded.
                         if ($imagePath !== null) {
                             $imageStmt = $conn->prepare(
-                                "INSERT INTO `IMAGE ITEM`
+                                "INSERT INTO `item_image`
                                     (ItemProfileID, ImageLink, DateUpload)
                                  VALUES (?, ?, NOW())"
                             );
