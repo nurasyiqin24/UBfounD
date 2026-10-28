@@ -118,7 +118,7 @@ $conn->close();
 header("Location: register.html?error=" . urlencode("Registration failed. Please try again."));
 exit;
 
-
+?>
 
 
 
