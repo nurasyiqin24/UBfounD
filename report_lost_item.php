@@ -99,6 +99,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Get the submitted form values.
         $itemName = trim($_POST["itemName"] ?? "");
         $size = trim($_POST["size"] ?? "");
+        $brand = trim($_POST["brand"] ?? "");
+        $colour = trim($_POST["colour"] ?? "");
         $categoryId = $_POST["category"] ?? "";
         $description = trim($_POST["description"] ?? "");
         $dateLost = $_POST["dateLost"] ?? "";
@@ -116,6 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (
             $itemName === "" ||
             $size === "" ||
+            $colour === "" ||
+            $brand === "" ||
             $categoryId === "" ||
             !ctype_digit((string)$categoryId) ||
             $description === "" ||
@@ -546,7 +550,7 @@ function escapeHtml($value) {
 
                                 <!--Item Colour-->
                                 <div class="mb-3">
-                                    <label for="colour" class="form-label">Item Colour</label>
+                                    <label for="colour" class="form-label">Colour</label>
                                         <input
                                             type="text"
                                             class="form-control"
@@ -559,7 +563,7 @@ function escapeHtml($value) {
 
                                 <!--Item Brand-->
                                 <div class="mb-3">
-                                    <label for="brand" class="form-label">Item Brand</label>
+                                    <label for="brand" class="form-label">Brand</label>
                                         <input
                                             type="text"
                                             class="form-control"
