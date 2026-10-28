@@ -322,8 +322,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                         // Show a simple message to the user.
                         $message =
-                            "The report could not be saved. Please check the database settings and try again.";
-                    }
+                            "Database error: " . $error->getMessage();
                 }
             }
         }
