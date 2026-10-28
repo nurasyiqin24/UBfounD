@@ -6,7 +6,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $conn = new mysqli(
     "localhost",
     "root",
-    "YOUR_MYSQL_PASSWORD",
+    "1234",
     "lostandfound",
     4406
 );
