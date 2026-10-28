@@ -80,7 +80,7 @@ sort($categories);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><?= $reportType === "FOUND" ? "Lost Items" : "Found Items" ?> | UbdFind</title>
+    <title> Found Items | UbdFind</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
@@ -91,7 +91,7 @@ sort($categories);
 <body>
 
 <!-- Navigation bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
         <a class="navbar-brand" href="index.html">UbdFind</a>
 
@@ -104,16 +104,11 @@ sort($categories);
 </nav>
 
 <!-- Page heading -->
-<div class="container mt-4">
-    <h1>
-        <?= $reportType === "LOST" ? "Lost Items" : "Found Items" ?>
-    </h1>
-
-    <p>
-        <?= $reportType === "LOST"
-            ? "Browse items that have been reported lost."
-            : "Browse items that have been reported found." ?>
-    </p>
+<div class="container listing-page">
+    <div class="listing-heading">
+        <h1>Found Items</h1>
+        <p>Browse items that have been reported found on campus.</p>
+    </div>
 
     <!-- Search and category filter -->
     <div class="row g-3 mb-4">
@@ -173,8 +168,8 @@ sort($categories);
                     <?php endif; ?>
 
                     <div class="card-body">
-                        <span class="badge <?= $reportType === "LOST" ? "bg-danger" : "bg-success" ?>">
-                            <?= htmlspecialchars($reportType) ?>
+                        <span class="report-badge report-badge-found">
+                            FOUND
                         </span>
 
                         <h5 class="card-title mt-2">

@@ -80,7 +80,7 @@ sort($categories);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><?= $reportType === "FOUND" ? "Lost Items" : "Found Items" ?> | UbdFind</title>
+    <title> Lost Items | UbdFind</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
@@ -91,14 +91,28 @@ sort($categories);
 <body>
 
 <!-- Navigation bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
         <a class="navbar-brand" href="index.html">UbdFind</a>
 
-        <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="index.html">Home</a>
-            <a class="nav-link" href="lost-items.php">Lost Items</a>
-            <a class="nav-link" href="found-items.php">Found Items</a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">Home</a>
+                <a class="nav-link active"
+                   aria-current="page"
+                   href="lost-items.php">Lost Items</a>
+                <a class="nav-link" href="found-items.php">Found Items</a>
+            </div>
         </div>
     </div>
 </nav>
@@ -106,18 +120,16 @@ sort($categories);
 <!-- Page heading -->
 <div class="container mt-4">
     <h1>
-        <?= $reportType === "LOST" ? "Lost Items" : "Found Items" ?>
+        Lost Items
     </h1>
 
     <p>
-        <?= $reportType === "LOST"
-            ? "Browse items that have been reported lost."
-            : "Browse items that have been reported found." ?>
+    Browse items that have been reported lost on campus
     </p>
 
     <!-- Search and category filter -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-8">
+    <div class="listing filters">
+        <div class="row g-3">
             <input
                 type="text"
                 id="searchItem"
@@ -166,15 +178,15 @@ sort($categories);
                             alt="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>"
                             style="height: 220px; object-fit: cover;">
                     <?php else: ?>
-                        <div class="d-flex align-items-center justify-content-center bg-light text-muted"
-                             style="height: 220px;">
+                        <div class="item image placeholder">
+                             
                             No image available
                         </div>
                     <?php endif; ?>
 
                     <div class="card-body">
-                        <span class="badge <?= $reportType === "LOST" ? "bg-danger" : "bg-success" ?>">
-                            <?= htmlspecialchars($reportType) ?>
+                        <span class="report-badge report-badge-lost">
+                            LOST
                         </span>
 
                         <h5 class="card-title mt-2">
@@ -198,9 +210,11 @@ sort($categories);
                                 : "Not specified" ?>
                         </p>
 
-                        <p class="card-text">
-                            <strong>Status:</strong>
-                            <?= htmlspecialchars($item["Status"] ?? "Not specified", ENT_QUOTES, 'UTF-8') ?>
+                        <p class="card-text mb-0">
+                            <strong>Status:</strong><br>
+                            <span class="status label">
+                                <?= htmlspecialchars($item["Status"] ?? "Not specified", ENT_QUOTES, 'UTF-8') ?>
+                            </span>
                         </p>
                     </div>
 
