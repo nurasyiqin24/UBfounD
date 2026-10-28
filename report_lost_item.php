@@ -228,15 +228,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             // because ITEM PROFILE has no Description column.
                             $profileStmt = $conn->prepare(
                                 "INSERT INTO `item_profile`
-                                    (CategoryID, ItemName, Size, OtherComments)
-                                VALUES (?, ?, ?, ?)"
+                                    (CategoryID, ItemName, Size, Brand, Colour OtherComments)
+                                VALUES (?, ?, ?, ?, ?, ?)"
                             );
 
                             $profileStmt->bind_param(
-                                "isss",
+                                "isssss",
                                 $categoryId,
                                 $itemName,
                                 $size,
+                                $brand,
+                                $colour,
                                 $description
                             );
 
@@ -538,6 +540,32 @@ function escapeHtml($value) {
                                             id="size"
                                             name="size"
                                             placeholder="e.g. Small, medium, large, or approximately 20 cm"
+                                            required
+                                        >
+                                </div>
+
+                                <!--Item Colour-->
+                                <div class="mb-3">
+                                    <label for="colour" class="form-label">Item Colour</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="colour"
+                                            name="colour"
+                                            placeholder="e.g. Red, Blue, Green"
+                                            required
+                                        >
+                                </div>
+
+                                <!--Item Brand-->
+                                <div class="mb-3">
+                                    <label for="brand" class="form-label">Item Brand</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="brand"
+                                            name="brand"
+                                            placeholder="e.g. Apple, Samsung, Nike"
                                             required
                                         >
                                 </div>
