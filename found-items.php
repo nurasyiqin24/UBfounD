@@ -1,18 +1,19 @@
 <?php
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-// Connect to the UbdFind database
+// Connect to the UbdFind database.
+// Keep your existing local database password here.
 $conn = new mysqli(
     "localhost",
     "root",
-    "1234",
+    "YOUR_MYSQL_PASSWORD",
     "lostandfound",
     4406
 );
 
 $conn->set_charset("utf8mb4");
 
-// Retrieve found items from the database that have been recorded as found. The query joins the item_report, item_profile, and category tables to get the necessary information about each found item. It also retrieves the most recent image for each item from the item_image table.
+// Retrieve found items.
 $reportType = "FOUND";
 
 $sql = "
@@ -42,7 +43,7 @@ $sql = "
         ON r.ItemProfileID = p.ItemProfileID
     LEFT JOIN category AS c
         ON p.CategoryID = c.CategoryID
-    WHERE r.ReportType = ?
+    WHERE UPPER(r.ReportType) = ?
     ORDER BY r.DateReported DESC
 ";
 
@@ -53,206 +54,485 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 $items = [];
+$categories = [];
 
 while ($row = $result->fetch_assoc()) {
     $items[] = $row;
-}
 
-// Get categories for the category filter
-$categories = [];
+    $categoryName = $row["CategoryName"] ?? "";
 
-foreach ($items as $item) {
-    $categoryName = $item["CategoryName"] ?? "";
-
-    if (
-        $categoryName !== "" &&
-        !in_array($categoryName, $categories, true)
-    ) {
-        $categories[] = $categoryName;
+    if ($categoryName !== "") {
+        $categories[$categoryName] = $categoryName;
     }
 }
 
-sort($categories);
+// Sort categories alphabetically.
+$categories = array_values($categories);
+sort($categories, SORT_NATURAL | SORT_FLAG_CASE);
+
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title> Found Items | UbdFind</title>
+    <title>Found Items - UbdFind</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
+    <!-- Our own CSS file -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<!-- Navigation bar -->
-<nav class="navbar navbar-expand-lg navbar-light sticky-top">
-    <div class="container">
-        <a class="navbar-brand" href="index.html">UbdFind</a>
+    <!-- ==================== NAVBAR ==================== -->
 
-        <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="index.html">Home</a>
-            <a class="nav-link" href="lost-items.php">Lost Items</a>
-            <a class="nav-link" href="found-items.php">Found Items</a>
+    <nav class="navbar navbar-expand-lg bg-white border-bottom">
+
+        <div class="container">
+
+            <!-- Website name -->
+            <a class="navbar-brand fw-bold" href="index.html">
+                UbdFind
+            </a>
+
+            <!-- Mobile menu button -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="lost-items.php">
+                            Lost Items
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link active"
+                            aria-current="page"
+                            href="found-items.php"
+                        >
+                            Found Items
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="my-reports.html">
+                            My Reports
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="matches.html">
+                            Matches
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link notification-bell"
+                            href="notifications.html"
+                            aria-label="Notifications"
+                        >
+                            🔔
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">
+                            Profile
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<!-- Page heading -->
-<div class="container listing-page">
-    <div class="listing-heading">
-        <h1>Found Items</h1>
-        <p>Browse items that have been reported found on campus.</p>
-    </div>
 
-    <!-- Search and category filter -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-8">
-            <input
-                type="text"
-                id="searchItem"
-                class="form-control"
-                placeholder="Search by item name..."
-                aria-label="Search items">
+    <!-- ==================== PAGE HEADER ==================== -->
+
+    <section class="py-5">
+
+        <div class="container">
+
+            <h1 class="fw-bold">
+                Found Items
+            </h1>
+
+            <p class="text-muted">
+                Browse items that have been reported found in UBD.
+            </p>
+
         </div>
+    </section>
 
-        <div class="col-md-4">
-            <select id="categoryFilter"
-                    class="form-select"
-                    aria-label="Filter by category">
-                <option value="">All Categories</option>
 
-                <?php foreach ($categories as $category): ?>
-                    <option value="<?= htmlspecialchars($category, ENT_QUOTES, 'UTF-8') ?>">
-                        <?= htmlspecialchars($category, ENT_QUOTES, 'UTF-8') ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-    </div>
+    <!-- ==================== SEARCH AND FILTER ==================== -->
 
-    <!-- Dynamic item cards -->
-    <div class="row g-4" id="itemsContainer">
+    <section class="pb-4">
 
-        <?php foreach ($items as $item): ?>
-            <?php
-                $itemName = $item["ItemName"] ?? "Unnamed Item";
-                $categoryName = $item["CategoryName"] ?? "Uncategorised";
-                $location = $item["Location"] ?? "Location not specified";
-                $dateOccurred = $item["DateOccurred"] ?? "";
-                $imageLink = $item["ImageLink"] ?? "";
-            ?>
+        <div class="container">
 
-            <div class="col-md-6 col-lg-4 item-card-container"
-                 data-name="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>"
-                 data-category="<?= htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') ?>">
+            <div class="row g-3">
 
-                <div class="card h-100 shadow-sm">
+                <!-- Search box -->
+                <div class="col-md-6">
 
-                    <?php if ($imageLink !== ""): ?>
-                        <img
-                            src="<?= htmlspecialchars($imageLink, ENT_QUOTES, 'UTF-8') ?>"
-                            class="card-img-top"
-                            alt="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>"
-                            style="height: 220px; object-fit: cover;">
-                    <?php else: ?>
-                        <div class="d-flex align-items-center justify-content-center bg-light text-muted"
-                             style="height: 220px;">
-                            No image available
-                        </div>
-                    <?php endif; ?>
+                    <label for="searchItem" class="form-label">
+                        Search Items
+                    </label>
 
-                    <div class="card-body">
-                        <span class="report-badge report-badge-found">
-                            FOUND
-                        </span>
-
-                        <h5 class="card-title mt-2">
-                            <?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>
-                        </h5>
-
-                        <p class="card-text mb-1">
-                            <strong>Category:</strong>
-                            <?= htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') ?>
-                        </p>
-
-                        <p class="card-text mb-1">
-                            <strong>Location:</strong>
-                            <?= htmlspecialchars($location, ENT_QUOTES, 'UTF-8') ?>
-                        </p>
-
-                        <p class="card-text mb-1">
-                            <strong>Date:</strong>
-                            <?= $dateOccurred !== ""
-                                ? htmlspecialchars($dateOccurred, ENT_QUOTES, 'UTF-8')
-                                : "Not specified" ?>
-                        </p>
-
-                        <p class="card-text">
-                            <strong>Status:</strong>
-                            <?= htmlspecialchars($item["Status"] ?? "Not specified", ENT_QUOTES, 'UTF-8') ?>
-                        </p>
-                    </div>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="searchItem"
+                        placeholder="Search by item name..."
+                    >
 
                 </div>
+
+                <!-- Category filter -->
+                <div class="col-md-4">
+
+                    <label for="categoryFilter" class="form-label">
+                        Category
+                    </label>
+
+                    <select
+                        class="form-select"
+                        id="categoryFilter"
+                    >
+                        <option value="" selected>
+                            All Categories
+                        </option>
+
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?= htmlspecialchars(
+                                $category,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>">
+                                <?= htmlspecialchars(
+                                    $category,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
+                            </option>
+                        <?php endforeach; ?>
+
+                    </select>
+                </div>
+
+                <!-- Search button -->
+                <div class="col-md-2 d-flex align-items-end">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary w-100 search-button"
+                        id="searchButton"
+                    >
+                        🔍 Search
+                    </button>
+
+                </div>
+
             </div>
+        </div>
+    </section>
 
-        <?php endforeach; ?>
 
-    </div>
+    <!-- ==================== FOUND ITEM LIST ==================== -->
 
-    <!-- Shown when no items match the filters -->
-    <p id="noResults"
-       class="text-center mt-4"
-       <?= count($items) > 0 ? "hidden" : "" ?>>
-        No items found.
-    </p>
-</div>
+    <section class="py-4">
 
-<!-- Search and category filtering -->
-<script>
-    const searchInput = document.getElementById("searchItem");
-    const categoryFilter = document.getElementById("categoryFilter");
-    const cards = document.querySelectorAll(".item-card-container");
-    const noResults = document.getElementById("noResults");
+        <div class="container">
 
-    function filterItems() {
-        const searchText = searchInput.value.toLowerCase().trim();
-        const selectedCategory = categoryFilter.value.toLowerCase();
+            <?php if (empty($items)): ?>
 
-        let visibleCount = 0;
+                <div class="alert alert-info" role="status">
+                    There are currently no items reported as found.
+                </div>
 
-        cards.forEach(function(card) {
-            const name = card.dataset.name.toLowerCase();
-            const category = card.dataset.category.toLowerCase();
+            <?php else: ?>
 
-            const matchesName = name.includes(searchText);
-            const matchesCategory =
-                selectedCategory === "" ||
-                category === selectedCategory;
+                <div class="row g-4" id="itemsContainer">
 
-            const visible = matchesName && matchesCategory;
+                    <?php foreach ($items as $item): ?>
 
-            card.hidden = !visible;
+                        <?php
+                        $itemName = $item["ItemName"] ?? "Unnamed Item";
+                        $categoryName = $item["CategoryName"] ?? "Other";
+                        $location = $item["Location"] ?? "Location not specified";
+                        $dateOccurred = $item["DateOccurred"] ?? "";
+                        $imageLink = trim($item["ImageLink"] ?? "");
 
-            if (visible) {
-                visibleCount++;
+                        $foundDate = $dateOccurred !== ""
+                            ? date("d F Y", strtotime($dateOccurred))
+                            : "Not specified";
+                        ?>
+
+                        <div
+                            class="col-md-6 col-lg-4 item-card-container"
+                            data-name="<?= htmlspecialchars(
+                                $itemName,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>"
+                            data-category="<?= htmlspecialchars(
+                                $categoryName,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>"
+                        >
+
+                            <div class="item-card h-100">
+
+                                <!-- Item image -->
+                                <div class="item-image">
+
+                                    <?php if ($imageLink !== ""): ?>
+
+                                        <img
+                                            src="<?= htmlspecialchars(
+                                                $imageLink,
+                                                ENT_QUOTES,
+                                                'UTF-8'
+                                            ) ?>"
+                                            alt="<?= htmlspecialchars(
+                                                $itemName,
+                                                ENT_QUOTES,
+                                                'UTF-8'
+                                            ) ?>"
+                                            loading="lazy"
+                                        >
+
+                                    <?php else: ?>
+
+                                        <span
+                                            style="font-size: 16px; color: #6c757d;"
+                                        >
+                                            No image available
+                                        </span>
+
+                                    <?php endif; ?>
+
+                                </div>
+
+
+                                <!-- Item information -->
+                                <div class="p-3">
+
+                                    <!-- Found status -->
+                                    <span class="badge bg-success mb-2">
+                                        FOUND
+                                    </span>
+
+                                    <!-- Item name -->
+                                    <h5 class="fw-bold">
+                                        <?= htmlspecialchars(
+                                            $itemName,
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>
+                                    </h5>
+
+                                    <!-- Category -->
+                                    <p class="text-muted mb-1">
+                                        Category:
+                                        <?= htmlspecialchars(
+                                            $categoryName,
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>
+                                    </p>
+
+                                    <!-- Location -->
+                                    <p class="text-muted mb-1">
+                                        Location:
+                                        <?= htmlspecialchars(
+                                            $location,
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>
+                                    </p>
+
+                                    <!-- Date -->
+                                    <p class="text-muted">
+                                        Found Date:
+                                        <?= htmlspecialchars(
+                                            $foundDate,
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>
+                                    </p>
+
+                                    <!-- View details button -->
+                                    <a
+                                        href="item-details.php?id=<?= (int) $item['ReportID'] ?>"
+                                        class="btn btn-primary w-100"
+                                    >
+                                        View Details
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endforeach; ?>
+
+                </div>
+
+                <!-- No matching results message -->
+                <p
+                    id="noResults"
+                    class="text-muted text-center mt-4"
+                    hidden
+                >
+                    No found items match your search.
+                </p>
+
+            <?php endif; ?>
+
+        </div>
+    </section>
+
+
+    <!-- ==================== FOOTER ==================== -->
+
+    <footer class="py-2">
+
+        <div class="container text-center">
+
+            <p class="fw-bold mb-1">
+                UbdFind
+            </p>
+
+            <p class="small mb-1">
+                Campus Lost &amp; Found System
+            </p>
+
+            <p class="small mb-1">
+                Need help?
+            </p>
+
+            <p class="small mb-1">
+                Email:
+                <a href="mailto:lostandfound@university.edu">
+                    UbdFind@ubd.edu.bn
+                </a>
+            </p>
+
+            <p class="small mb-2">
+                Phone: +673 246 XXXX
+            </p>
+
+            <p class="small mb-0">
+                &copy; 2026 UbdFind
+            </p>
+
+        </div>
+    </footer>
+
+
+    <!-- ==================== SEARCH FUNCTIONALITY ==================== -->
+
+    <script>
+        const searchInput = document.getElementById("searchItem");
+        const categoryFilter = document.getElementById("categoryFilter");
+        const searchButton = document.getElementById("searchButton");
+        const cards = document.querySelectorAll(".item-card-container");
+        const noResults = document.getElementById("noResults");
+
+        function filterItems() {
+            const searchText = searchInput.value.trim().toLowerCase();
+            const selectedCategory = categoryFilter.value.toLowerCase();
+
+            let visibleCount = 0;
+
+            cards.forEach(function(card) {
+                const name = (
+                    card.dataset.name || ""
+                ).toLowerCase();
+
+                const category = (
+                    card.dataset.category || ""
+                ).toLowerCase();
+
+                const matchesName = name.includes(searchText);
+
+                const matchesCategory =
+                    selectedCategory === "" ||
+                    category === selectedCategory;
+
+                const visible = matchesName && matchesCategory;
+
+                card.hidden = !visible;
+
+                if (visible) {
+                    visibleCount++;
+                }
+            });
+
+            if (noResults) {
+                noResults.hidden = visibleCount > 0;
+            }
+        }
+
+        // Search as the user types.
+        searchInput.addEventListener("input", filterItems);
+
+        // Filter when the category changes.
+        categoryFilter.addEventListener("change", filterItems);
+
+        // Search when the button is clicked.
+        searchButton.addEventListener("click", filterItems);
+
+        // Allow Enter to trigger search.
+        searchInput.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                filterItems();
             }
         });
+    </script>
 
-        noResults.hidden = visibleCount > 0;
-    }
 
-    searchInput.addEventListener("input", filterItems);
-    categoryFilter.addEventListener("change", filterItems);
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
 
 </body>
 </html>
+
+<?php
+$conn->close();
+?>
