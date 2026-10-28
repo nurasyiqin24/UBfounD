@@ -228,7 +228,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             // because ITEM PROFILE has no Description column.
                             $profileStmt = $conn->prepare(
                                 "INSERT INTO `item_profile`
-                                    (CategoryID, ItemName, Size, Brand, Colour OtherComments)
+                                    (CategoryID, ItemName, Size, Brand, Colour, OtherComments)
                                 VALUES (?, ?, ?, ?, ?, ?)"
                             );
 
