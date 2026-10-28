@@ -98,6 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Get the submitted form values.
         $itemName = trim($_POST["itemName"] ?? "");
+        $size = trim($_POST["size"] ?? "");
         $categoryId = $_POST["category"] ?? "";
         $description = trim($_POST["description"] ?? "");
         $dateLost = $_POST["dateLost"] ?? "";
@@ -114,6 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Check the required fields.
         if (
             $itemName === "" ||
+            $size === "" ||
             $categoryId === "" ||
             !ctype_digit((string)$categoryId) ||
             $description === "" ||
@@ -226,14 +228,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             // because ITEM PROFILE has no Description column.
                             $profileStmt = $conn->prepare(
                                 "INSERT INTO `item_profile`
-                                    (CategoryID, ItemName, OtherComments)
-                                VALUES (?, ?, ?)"
+                                    (CategoryID, ItemName, Size, OtherComments)
+                                VALUES (?, ?, ?, ?)"
                             );
 
                             $profileStmt->bind_param(
                                 "iss",
                                 $categoryId,
                                 $itemName,
+                                $size,
                                 $description
                             );
 
@@ -524,6 +527,19 @@ function escapeHtml($value) {
                                         rows="4"
                                         placeholder="Describe the item, including its colour, brand, model, markings, size or other identifying details."
                                         required></textarea>
+                                </div>
+
+                                <!--Item size-->
+                                <div class="mb-3">
+                                    <label for="size" class="form-label">Item Size</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="size"
+                                            name="size"
+                                            placeholder="e.g. Small, medium, large, or approximately 20 cm"
+                                            required
+                                        >
                                 </div>
 
                                 <!-- Date the item was lost. -->
