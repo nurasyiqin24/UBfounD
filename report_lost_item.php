@@ -270,8 +270,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 $reportStmt = $conn->prepare(
                                     "INSERT INTO `item_report`
                                         (UserID, ItemProfileID, ReportType,
-                                        DateReported, Location, DateOccured,
-                                        TimeOccured, Status, Comments)
+                                        DateReported, Location, DateOccurred,
+                                        TimeOccurred, Status, Comments)
                                     VALUES (?, ?, 'Lost', CURDATE(),
                                             ?, ?, NULL, 'Open', ?)"
                                 );
@@ -279,10 +279,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 $reportStmt = $conn->prepare(
                                     "INSERT INTO `item_report`
                                         (UserID, ItemProfileID, ReportType,
-                                        DateReported, Location, DateOccured,
-                                        Status, Comments)
+                                        DateReported, Location, DateOccurred,
+                                        TimeOccurred, Status, Comments)
                                     VALUES (?, ?, 'Lost', CURDATE(),
-                                            ?, ?, 'Open', ?)"
+                                            ?, ?, NULL, 'Open', ?)"
                                 );
                             }
 
