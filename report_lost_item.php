@@ -233,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             );
 
                             $profileStmt->bind_param(
-                                "iss",
+                                "isss",
                                 $categoryId,
                                 $itemName,
                                 $size,
