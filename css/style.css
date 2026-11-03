@@ -246,3 +246,11 @@ footer {
 .register-link:hover {
     text-decoration: underline;
 }
+
+/* Navigation logo */
+.navbar-logo {
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
