@@ -249,8 +249,8 @@ footer {
 
 /* Navigation logo */
 .navbar-logo {
-    height: 45px;
-    width: auto;
+    height: 55px;
+    width: 180px;
     object-fit: contain;
     display: block;
 }
