@@ -73,22 +73,22 @@ if ($result->num_rows === 0) {
     die("Item report not found.");
 }
 
-$itemDetails = $result->fetch_assoc();
+$item = $result->fetch_assoc();
 
 function e($value) {
     return htmlspecialchars((string)($value ?? ""), ENT_QUOTES, 'UTF-8');
 }
 
-$reportedDate = !empty($itemDetails['DateReported'])
-    ? date("d F, Y", strtotime($itemDetails['DateReported']))
+$reportedDate = !empty($item['DateReported'])
+    ? date("d F, Y", strtotime($item['DateReported']))
     : "Not specified";
 
-$occurredDate = !empty($itemDetails['DateOccurred'])
-    ? date("d F, Y", strtotime($itemDetails['DateOccurred']))
+$occurredDate = !empty($item['DateOccurred'])
+    ? date("d F, Y", strtotime($item['DateOccurred']))
     : "Not specified";
 
-$occurredTime = !empty($itemDetails['TimeOccurred'])
-    ? date("h:i A", strtotime($itemDetails['TimeOccurred']))
+$occurredTime = !empty($item['TimeOccurred'])
+    ? date("h:i A", strtotime($item['TimeOccurred']))
     : "Not specified";
 
 //Close the database connection
