@@ -1,11 +1,27 @@
 <?php
 session_start();
 
+// Initialise messages and user information
+$message = "";
+$messageType = "success";
+
+$userId = $_SESSION["user_id"] ?? null;
+$userEmail = "";
+$userPhone = "";
+$categories = [];
+
+
 // Check if the user is logged in
-if (!isset($_SESSION["UserID"])) {
+if ($userId === null){
     header("Location: login.html");
     exit();
 }
+
+// Escape output safely
+function escapeHtml($value) {
+    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
+}
+
 
 // Connect to the database
 $conn = new mysqli(
@@ -22,41 +38,79 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8mb4");
 
+// Retrieve category information
+$sql = "SELECT CategoryID, CategoryName
+        FROM category
+        ORDER BY CategoryID ASC";
+
+$result = $conn->query($sql);
+
+while ($row = $result->fetch_assoc()) {
+    $categories[] = $row;
+}
+
+// Retrieve registered email and phone information
+$sql = "SELECT * FROM `user` WHERE UserID = ?";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+
+$userResult = $stmt->get_result();
+$user = $userResult->fetch_assoc();
+
+$stmt->close();
+
+if ($user) {
+    $userEmail = $user["Emaill"] ?? "";
+
+    // Check common possible phone column names.
+    // Change this to your actual phone column if necessary.
+    $userPhone = $user["Phone"] 
+        ?? $user["PhoneNumber"]
+        ?? $user["ContactNumber"]
+        ?? "";
+}
+
+
 // Check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Get the user's ID
-    $userID = $_SESSION["UserID"];
+    $userID = $_SESSION["user_id"];
 
     // Get the form values
-    $itemName = trim($_POST["itemName"]);
-    $categoryName = trim($_POST["category"]);
-    $description = trim($_POST["description"]);
-    $size = trim($_POST["size"]);
-    $brand = trim($_POST["brand"]);
-    $colour = trim($_POST["colour"]);
-    $description = trim($_POST["description"]);
+    $itemName = trim($_POST["itemName"]??"");
+    $categoryName = trim($_POST["category"]??"");
+    $description = trim($_POST["description"]??"");
+    $size = trim($_POST["size"]??"");
+    $brand = trim($_POST["brand"]??"");
+    $colour = trim($_POST["colour"]??"");
 
-    $dateFound = $_POST["dateFound"];
-    $timeOccurred = $_POST["timeOccurred"];
+    $dateFound = $_POST["dateFound"]??"";
+    $timeOccurred = $_POST["timeOccurred"]??"";
 
-    $location = trim($_POST["location"]);
-    $notes = trim($_POST["notes"]);
+    $location = trim($_POST["location"]??"");
+    $notes = trim($_POST["notes"]??"");
 
     // Check required fields
     if (
         empty($itemName) ||
         empty($categoryName) ||
-        empty($size) ||
+        empty($size)||
         empty($brand) ||
         empty($colour) ||
         empty($description) ||
         empty($dateFound) ||
         empty($location)
-    ) {
-        die("Please complete all required fields.");
+
+    ){
+        
+        $message = "Please complete all required fields.";
+        $messageType = "danger";
     }
 
+    
    // Add seconds to the selected time
     if ($timeOccurred !== "") {
 
@@ -109,7 +163,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $uploadFolder = __DIR__ . "/uploads/";
 
         if (!is_dir($uploadFolder)) {
-            mkdir($uploadFolder, 0755, true);
+            if(!mkdir($uploadFolder, 0755, true)) {
+                        throw new Exception("Unable to create uploads folder.");
+                    }
         }
 
         // Generate a unique filename
@@ -158,14 +214,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt = $conn->prepare($sql);
         $stmt->bind_param(
-            "sisss",
-            $itemName,
-            $categoryID,
-            $size,
-            $brand,
-            $colour,
-            $description
-        );
+                "sissss",
+                $itemName,
+                $categoryID,
+                $size,
+                $brand,
+                $colour,
+                $description
+            );
 
         $stmt->execute();
 
@@ -175,13 +231,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
 
         // Set the report type and status
-        $reportType = "Found";
-        $status = "Open";
+        $reportType = "FOUND";
+        $status = "Found item is available to claim";
 
         // Insert report details into ITEM REPORT
-        $sql = "INSERT INTO `ITEM REPORT`
+        $sql = "INSERT INTO `item_report`
                 (UserID, ItemProfileID, ReportType, DateReported,
-                 Location, DateOccured, TimeOccured, Status, Comments)
+                 Location, DateOccurred, TimeOccurred, Status, Comments)
                 VALUES (?, ?, ?, CURDATE(), ?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
@@ -204,7 +260,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Insert image information if an image was uploaded
         if ($imagePath !== null) {
 
-            $sql = "INSERT INTO `IMAGE ITEM`
+            $sql = "INSERT INTO `item_image`
                     (ItemProfileID, ImageLink, DateUpload)
                     VALUES (?, ?, CURDATE())";
 
@@ -228,7 +284,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->close();
 
         // Redirect to the Found Items page
-        header("Location: founditems.php?success=1");
+        header("Location: found-items.php?success=1");
         exit();
 
     } catch (Throwable $e) {
@@ -549,7 +605,7 @@ $conn->close();
                                 <!-- Time Found -->
                                 <div class="mb-4">
 
-                                    <label for="timeOccured"
+                                    <label for="timeOccurred"
                                         class="form-label fw-semibold">
                                         Time Found
                                     </label>
@@ -557,8 +613,8 @@ $conn->close();
                                     <input
                                         type="time"
                                         class="form-control"
-                                        id="timeOccured"
-                                        name="timeOccured">
+                                        id="timeOccurred"
+                                        name="timeOccurred">
 
                                 </div>
 
