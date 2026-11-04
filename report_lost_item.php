@@ -352,7 +352,7 @@ function escapeHtml($value) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Report Lost Item - UbdFind</title>
+    <title>Report Lost Item - UbfounD</title>
 
     <!-- Bootstrap CSS keeps the page responsive. -->
     <link
