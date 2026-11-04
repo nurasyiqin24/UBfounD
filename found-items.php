@@ -101,7 +101,10 @@ $stmt->close();
 
             <!-- Website name -->
             <a class="navbar-brand fw-bold" href="index.html">
-                UbdFind
+                <img src="UBFounD\assets\images\ubfound-logo-version3a.png" 
+                    alt="UBFounD Logo" 
+                    class="navbar-logo"
+                >
             </a>
 
             <!-- Mobile menu button -->

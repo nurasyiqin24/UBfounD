@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Report Found Item - UBfounD</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg border-bottom">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold" href="index.html">
+                UBfounD
+            </a>
+
+            <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="lost-items.php">Lost Items</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="found-items.php">Found Items</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="found-item-report.html">
+                            Report Found Item
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Found Item Report Form -->
+    <section class="py-5">
+
+        <div class="container">
+
+            <div class="row justify-content-center">
+
+                <div class="col-lg-8">
+
+                    <h1 class="fw-bold mb-2">Report a Found Item</h1>
+
+                    <p class="text-muted mb-4">
+                        Please provide the details of the item you found on campus.
+                    </p>
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-body p-4">
+
+                            <form action="report_found_item.php"
+                                method="POST"
+                                enctype="multipart/form-data">
+
+                                <!-- Item Name -->
+                                <div class="mb-3">
+                                    <label for="itemName" class="form-label">
+                                        Item Name *
+                                    </label>
+
+                                    <input type="text"
+                                        class="form-control"
+                                        id="itemName"
+                                        name="itemName"
+                                        maxlength="100"
+                                        placeholder="e.g. Smartphone"
+                                        required>
+                                </div>
+
+
+                                <!-- Category -->
+                                <div class="mb-3">
+                                    <label for="category" class="form-label">
+                                        Category *
+                                    </label>
+
+                                    <select class="form-select"
+                                        id="category"
+                                        name="category"
+                                        required>
+
+                                        <option value="">Select a category</option>
+                                        <option value="Electronics">Electronics</option>
+                                        <option value="Stationaries">Stationaries</option>
+                                        <option value="Documents">Documents</option>
+                                        <option value="Keys">Keys</option>
+                                        <option value="Books">Books</option>
+                                        <option value="Miscallaneous">Miscallaneous</option>
+
+                                    </select>
+                                </div>
+
+
+                                <!-- Size -->
+                                <div class="mb-3">
+                                    <label for="size" class="form-label">
+                                        Size *
+                                    </label>
+
+                                    <input type="text"
+                                        class="form-control"
+                                        id="size"
+                                        name="size"
+                                        maxlength="50"
+                                        placeholder="e.g. Small, Medium, Large or N/A"
+                                        required>
+                                </div>
+
+
+                                <!-- Brand -->
+                                <div class="mb-3">
+                                    <label for="brand" class="form-label">
+                                        Brand *
+                                    </label>
+
+                                    <input type="text"
+                                        class="form-control"
+                                        id="brand"
+                                        name="brand"
+                                        maxlength="100"
+                                        placeholder="e.g. Apple or Unknown"
+                                        required>
+                                </div>
+
+
+                                <!-- Colour -->
+                                <div class="mb-3">
+                                    <label for="colour" class="form-label">
+                                        Colour *
+                                    </label>
+
+                                    <input type="text"
+                                        class="form-control"
+                                        id="colour"
+                                        name="colour"
+                                        maxlength="20"
+                                        placeholder="e.g. Black"
+                                        required>
+                                </div>
+
+
+                                <!-- Description -->
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">
+                                        Item Description *
+                                    </label>
+
+                                    <textarea class="form-control"
+                                        id="description"
+                                        name="description"
+                                        rows="3"
+                                        maxlength="1000"
+                                        placeholder="Describe the item..."
+                                        required></textarea>
+                                </div>
+
+
+                                <hr class="my-4">
+
+
+                                <h5 class="fw-bold mb-3">
+                                    Found Location and Date
+                                </h5>
+
+
+                                <!-- Date Found -->
+                                <div class="mb-3">
+                                    <label for="dateFound" class="form-label">
+                                        Date Found *
+                                    </label>
+
+                                    <input type="date"
+                                        class="form-control"
+                                        id="dateFound"
+                                        name="dateFound"
+                                        required>
+                                </div>
+
+
+                                <!-- Time Found -->
+                                <div class="mb-3">
+                                    <label for="timeOccured" class="form-label">
+                                        Time Found
+                                    </label>
+
+                                    <input type="time"
+                                        class="form-control"
+                                        id="timeOccured"
+                                        name="timeOccured">
+                                </div>
+
+
+                                <!-- Location -->
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">
+                                        Found Location *
+                                    </label>
+
+                                    <input type="text"
+                                        class="form-control"
+                                        id="location"
+                                        name="location"
+                                        maxlength="300"
+                                        placeholder="e.g. UBD Library, First Floor"
+                                        required>
+                                </div>
+
+
+                                <!-- Notes -->
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">
+                                        Additional Notes
+                                    </label>
+
+                                    <textarea class="form-control"
+                                        id="notes"
+                                        name="notes"
+                                        rows="3"
+                                        maxlength="2000"
+                                        placeholder="Any additional information..."></textarea>
+                                </div>
+
+
+                                <hr class="my-4">
+
+
+                                <!-- Image Upload -->
+                                <div class="mb-4">
+                                    <label for="itemImage" class="form-label">
+                                        Upload Item Image (Optional)
+                                    </label>
+
+                                    <input type="file"
+                                        class="form-control"
+                                        id="itemImage"
+                                        name="itemImage"
+                                        accept=".jpg,.jpeg,.png">
+
+                                    <div class="form-text">
+                                        Accepted formats: JPG and PNG. Maximum size: 5 MB.
+                                    </div>
+                                </div>
+
+
+                                <!-- Submit Button -->
+                                <div class="d-flex gap-2">
+
+                                    <button type="submit" class="btn btn-primary">
+                                        Submit Found Item
+                                    </button>
+
+                                    <a href="found-items.php"
+                                        class="btn btn-outline-secondary">
+                                        Cancel
+                                    </a>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="py-3">
+        <div class="container text-center">
+
+            <p class="fw-bold mb-1">UBfounD</p>
+
+            <p class="small mb-1">
+                Campus Lost & Found System
+            </p>
+
+            <p class="small mb-0">
+                © 2026 UBfounD
+            </p>
+
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
