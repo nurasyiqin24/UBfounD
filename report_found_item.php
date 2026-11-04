@@ -52,20 +52,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         empty($colour) ||
         empty($description) ||
         empty($dateFound) ||
-        empty($description) ||
-        empty($timeOccurred) ||
         empty($location)
     ) {
         die("Please complete all required fields.");
     }
 
-    // Add seconds to the selected time
-    if($timeOccurred !== "") {
+   // Add seconds to the selected time
+    if ($timeOccurred !== "") {
+
+    // HTML time input usually returns HH:MM
+    if (strlen($timeOccurred) === 5) {
         $timeOccurred .= ":00";
-    } else {
-        $timeOccurred = $timeOccurred null;;
     }
-    
+
+    } else {
+
+    // Store NULL if no time was provided
+    $timeOccurred = null;
+    }
 
     // Store the uploaded image path
     $imagePath = null;
