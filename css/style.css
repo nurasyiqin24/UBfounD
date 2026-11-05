@@ -249,9 +249,25 @@ footer {
 
 /* Navigation logo */
 .navbar-logo {
-    height: 100px; 
+    height: 300px; 
     width: auto;
-    max-height: 70px;
+    /* max-height: 70px; */
     object-fit: contain;
     display: block;
 }
+
+@media (max-width: 768px) {
+        .navbar-logo {
+        height: 100px; 
+        width: auto;
+        max-height: 70px;
+        object-fit: contain;
+        display: block;
+    }
+
+
+
+}
+
+/*Create a separate file for mobile version*/
+/*Make sure the logo is visbile*/

@@ -4,7 +4,7 @@ session_start();
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-$conn = new mysqli(
+$conn = new mysqli( // Security protecgtion is weak. Make sure censor the password.
     "localhost",
     "root",
     "1234",
